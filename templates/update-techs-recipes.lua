@@ -8,5 +8,5 @@ end
 for i, force in pairs(game.forces) do
   force.reset_recipes()
   force.reset_technologies()
-  check(force, "circuit-network")
+  check(force, "shortwave")
 end
