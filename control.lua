@@ -21,7 +21,6 @@ local function check_channels()
 		for channel,link in pairs(channels) do
 			local nodes = link.circuit_connected_entities
 			if #nodes.red == 0 and #nodes.green == 0 then
-				log("close channel "..channel)
 				link.destroy()
 				channels[channel] = nil
 			end
@@ -77,7 +76,6 @@ local function radio_port(radio)
 	if not port and ghosts and ghosts[1] then
 		_, port = ghosts[1].revive()
 		table.remove(ghosts, 1)
-		log("revive port "..port.unit_number)
 	end
 
 	if not port then
@@ -86,12 +84,10 @@ local function radio_port(radio)
 			position = radio.position,
 			force = radio.force,
 		})
-		log("create port "..port.unit_number)
 	end
 
 	for _, ghost in ipairs(ghosts) do
 		ghost.destroy()
-		log("remove ghost "..ghost.unit_number)
 	end
 
 	port.operable = false
@@ -132,7 +128,6 @@ local function radio_tune(radio)
 	local channel = signal.signal.name..":"..signal.count
 
 	if not global[team][channel] then
-		log("open channel "..channel)
 		global[team][channel] = radio.surface.create_entity({
 			name = "shortwave-link",
 			position = { 0, 0 },
@@ -141,8 +136,6 @@ local function radio_tune(radio)
 	end
 
 	local relay = global[team][channel]
-
-	log(serialize(port.circuit_connection_definitions))
 
 	link.connect_neighbour({
 		wire = defines.wire_type.red,
@@ -196,14 +189,30 @@ local function OnEntityRemoved(event)
 	end
 end
 
+local function OnEntitySettingsPasted(event)
+	local entity = event.destination
+
+	if not entity or not entity.valid then
+		return
+	end
+
+	if entity.name == "shortwave-radio" then
+		check_state(entity.force)
+		radio_tune(entity)
+		check_channels()
+	end
+end
+
 script.on_init(function()
 	script.on_event({defines.events.on_built_entity, defines.events.on_robot_built_entity}, OnEntityCreated)
 	script.on_event({defines.events.on_player_mined_entity, defines.events.on_robot_pre_mined, defines.events.on_entity_died}, OnEntityRemoved)
+	script.on_event({defines.events.on_entity_settings_pasted}, OnEntitySettingsPasted)
 end)
 
 script.on_load(function()
 	script.on_event({defines.events.on_built_entity, defines.events.on_robot_built_entity}, OnEntityCreated)
 	script.on_event({defines.events.on_player_mined_entity, defines.events.on_robot_pre_mined, defines.events.on_entity_died}, OnEntityRemoved)
+	script.on_event({defines.events.on_entity_settings_pasted}, OnEntitySettingsPasted)
 end)
 
 script.on_event({defines.events.on_gui_closed}, function(event)

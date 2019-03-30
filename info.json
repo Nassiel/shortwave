@@ -1,12 +1,12 @@
 {
   "name": "shortwave",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "factorio_version": "0.17",
   "title": "Shortwave",
   "author": "dorfl",
   "contact": "Dorfl <ceramic.atheist@gmail.com>",
   "homepage": "https://gitlab.com/aerosuidae/shortwave",
-  "description": "Connect circuit networks via shortwave radio.",
+  "description": "Connect circuit networks via shortwave radio channels.",
   "dependencies": [
     "base >= 0.17.1"
   ]

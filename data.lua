@@ -1,6 +1,10 @@
 local cc = table.deepcopy(data.raw["constant-combinator"]["constant-combinator"])
 local dc = table.deepcopy(data.raw["decider-combinator"]["decider-combinator"])
 
+for _, point in ipairs(cc.circuit_wire_connection_points) do
+	point.shadow = point.wire
+end
+
 local nosprites = {
 	north = {
 		filename = "__shortwave__/nothing.png",
@@ -244,11 +248,13 @@ data:extend({
 				width = 48,
 				height = 48,
 				priority = "high",
+				shift = { 0, 0.05 },
 				hr_version = {
 					filename = "__shortwave__/radio-hr.png",
 					width = 96,
 					height = 96,
 					priority = "high",
+					shift = { 0, 0.05 },
 					scale = 0.5,
 				}
 			},
@@ -257,11 +263,13 @@ data:extend({
 				width = 48,
 				height = 48,
 				priority = "high",
+				shift = { 0, 0.05 },
 				hr_version = {
 					filename = "__shortwave__/radio-hr.png",
 					width = 96,
 					height = 96,
 					priority = "high",
+					shift = { 0, 0.05 },
 					scale = 0.5,
 				}
 			},
@@ -270,11 +278,13 @@ data:extend({
 				width = 48,
 				height = 48,
 				priority = "high",
+				shift = { 0, 0.05 },
 				hr_version = {
 					filename = "__shortwave__/radio-hr.png",
 					width = 96,
 					height = 96,
 					priority = "high",
+					shift = { 0, 0.05 },
 					scale = 0.5,
 				}
 			},
@@ -283,11 +293,13 @@ data:extend({
 				width = 48,
 				height = 48,
 				priority = "high",
+				shift = { 0, 0.05 },
 				hr_version = {
 					filename = "__shortwave__/radio-hr.png",
 					width = 96,
 					height = 96,
 					priority = "high",
+					shift = { 0, 0.05 },
 					scale = 0.5,
 				}
 			},
