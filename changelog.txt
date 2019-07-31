@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.5
+Date: 31. 07. 2019
+  Bugfixes:
+    - Un-break collision_mask in radio combinator entity
+---------------------------------------------------------------------------------------------------
+Version: 0.1.4
+Date: 30. 07. 2019
+  Bugfixes:
+    - Check for broken shortwave blueprints and alert player
+    - Block placement of lone I/O port using pipette in cheat mode
+---------------------------------------------------------------------------------------------------
 Version: 0.1.3
 Date: 30. 03. 2019
   Changes:

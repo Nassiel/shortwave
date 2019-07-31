@@ -10,6 +10,10 @@ local function serialize(t)
 	return "{ "..table.concat(s, ", ").." }"
 end
 
+local function prefixed(str, start)
+	return str:sub(1, #start) == start
+end
+
 local function check_state(force)
 	if not global[force.index] then
 		global[force.index] = {}
@@ -165,6 +169,51 @@ local function OnEntityCreated(event)
 
 	if not entity or not entity.valid then
 		return
+	end
+
+	-- check for blueprints missing I/O port or radio
+	if entity.name == "entity-ghost"
+		and entity.ghost_name
+		and prefixed(entity.ghost_name, "shortwave-")
+	then
+
+		local r = entity.surface.count_entities_filtered({
+			ghost_name = 'shortwave-radio',
+			area = {
+				left_top = { x = entity.position.x - 0.1, y = entity.position.y - 0.1 },
+				right_bottom = { x = entity.position.x + 0.1, y = entity.position.y + 0.1 },
+			}
+		}) > 0
+
+		local p = entity.surface.count_entities_filtered({
+			ghost_name = 'shortwave-port',
+			area = {
+				left_top = { x = entity.position.x - 0.1, y = entity.position.y - 0.1 },
+				right_bottom = { x = entity.position.x + 0.1, y = entity.position.y + 0.1 },
+			}
+		}) > 0
+
+		if not (r and p) and not event.item then
+			game.print("Broken shortwave blueprint! Include both I/O port and radio entities.")
+			entity.destroy()
+			return
+		end
+	end
+
+	-- check for cheat mode pipette of I/O port
+	if entity.name == "shortwave-port" then
+		local r = entity.surface.count_entities_filtered({
+			name = 'shortwave-radio',
+			area = {
+				left_top = { x = entity.position.x - 0.1, y = entity.position.y - 0.1 },
+				right_bottom = { x = entity.position.x + 0.1, y = entity.position.y + 0.1 },
+			}
+		})
+		if r == 0 then
+			game.print("Can't place shortwave I/O port alone.")
+			entity.destroy()
+			return
+		end
 	end
 
 	if entity.name == "shortwave-radio" then
