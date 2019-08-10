@@ -252,16 +252,43 @@ local function OnEntitySettingsPasted(event)
 	end
 end
 
+local function interface()
+	remote.add_interface('shortwave', {
+		get_channel_merged_signals = function(force, channel)
+			local team = force.index
+			if global[team] and global[team][channel] then
+				return global[team][channel].get_merged_signals()
+			end
+			return nil
+		end,
+		get_channel = function(radio)
+			if radio and radio.valid and radio.name == 'shortwave-radio' then
+				local signal = radio.get_control_behavior().get_signal(1)
+				if signal and signal.signal then
+					return signal.signal.name..":"..signal.count
+				end
+			end
+			return nil
+		end,
+		get_relay = function(force, channel)
+			local team = force.index
+			return global[team] and global[team][channel]
+		end,
+	})
+end
+
 script.on_init(function()
 	script.on_event({defines.events.on_built_entity, defines.events.on_robot_built_entity}, OnEntityCreated)
 	script.on_event({defines.events.on_player_mined_entity, defines.events.on_robot_pre_mined, defines.events.on_entity_died}, OnEntityRemoved)
 	script.on_event({defines.events.on_entity_settings_pasted}, OnEntitySettingsPasted)
+	interface()
 end)
 
 script.on_load(function()
 	script.on_event({defines.events.on_built_entity, defines.events.on_robot_built_entity}, OnEntityCreated)
 	script.on_event({defines.events.on_player_mined_entity, defines.events.on_robot_pre_mined, defines.events.on_entity_died}, OnEntityRemoved)
 	script.on_event({defines.events.on_entity_settings_pasted}, OnEntitySettingsPasted)
+	interface()
 end)
 
 script.on_event({defines.events.on_gui_closed}, function(event)
